@@ -26,6 +26,12 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::middleware(['api', 'auth:api'])
                 ->prefix('api')
                 ->group(base_path('routes/api-auth.php'));
+
+            Route::middleware('web')
+                ->as('passport.')
+                ->prefix(config('passport.path', 'oauth'))
+                ->namespace('Laravel\Passport\Http\Controllers')
+                ->group(base_path('routes/passport.php'));
         },
     )
     ->withMiddleware(function (Middleware $middleware) {
