@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Laravel\Passport\Client;
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\Passport;
@@ -15,6 +16,8 @@ use Laravel\Passport\Passport;
 abstract class TestCase extends BaseTestCase
 {
     use RefreshDatabase, WithFaker;
+
+    protected bool $usingLiveDb = false;
 
     protected ?Client $personalAccessClient = null;
 
@@ -25,11 +28,22 @@ abstract class TestCase extends BaseTestCase
     }
 
     /** Get Original Response  */
-    protected function original($response)
+    protected function original(\Illuminate\Testing\TestResponse $response)
     {
         $original = $response->original;
 
         return ($original instanceof JsonResource) ? $original->resource : $original;
+    }
+
+    protected function useLiveDB()
+    {
+        DB::purge(config('database.default'));
+
+        config(['database.connections.sqlite.database' => database_path('database.sqlite')]);
+
+        DB::setDefaultConnection(config('database.default'));
+
+        $this->usingLiveDb = true;
     }
 
     /**
@@ -57,7 +71,7 @@ abstract class TestCase extends BaseTestCase
             unset($args['guard']);
         }
         $user = $this->makeUser(...$args);
-        $this->actingAs($user, $guard ?? 'web');
+        $this->actingAs($user, $guard ?? 'api');
 
         return $user;
     }
@@ -69,7 +83,7 @@ abstract class TestCase extends BaseTestCase
      */
     protected function authenticateUserWithToken(User $user, $scopes = [])
     {
-        if (!$this->personalAccessClient) {
+        if (! $this->personalAccessClient) {
             $this->createPersonalAccessClient();
         }
 

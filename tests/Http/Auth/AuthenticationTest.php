@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Auth;
+namespace Tests\Http\Auth;
 
 use App\Models\User;
 use PHPUnit\Framework\Attributes\Test;
@@ -19,21 +19,20 @@ class AuthenticationTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->postJson(route('login.post'), [
+        $this->postJson(route('login'), [
             'email' => $user->email,
             'password' => 'password',
-        ]);
-
-        $response->assertStatus(200)
+        ])
+            ->assertOk()
             ->assertJsonStructure(['token', 'user' => ['id', 'name', 'email']]);
     }
 
     #[Test]
     public function login_with_invalid_credentials()
     {
-        $response = $this->postJson(route('login.post'), [
+        $this->postJson(route('login'), [
             'email' => 'nonexistent@example.com',
             'password' => 'wrongpassword',
-        ])->assertStatus(422);
+        ])->assertUnprocessable();
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Passport;
+namespace Tests\Http\Passport;
 
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\Passport;
@@ -27,7 +27,7 @@ class PersonalAccessTokenTest extends TestCase
     #[Test]
     public function get_scopes(): void
     {
-        $this->makeUserAndAuthenticate();
+        $this->makeUserAndAuthenticate(guard : 'web');
 
         $response = $this->getJson(route('passport.scopes.index'))
             ->assertJsonCount(1);
@@ -36,7 +36,7 @@ class PersonalAccessTokenTest extends TestCase
     #[Test]
     public function get_all_personal_tokens_user_has_created(): void
     {
-        $user = $this->makeUserAndAuthenticate();
+        $user = $this->makeUserAndAuthenticate(guard : 'web');
 
         /** @var \Laravel\Passport\PersonalAccessTokenResult $token */
         $token = $user->createToken($this->personalAccessClient->name, ['sample-scope']);
@@ -56,7 +56,7 @@ class PersonalAccessTokenTest extends TestCase
     #[Test]
     public function store_new_personal_tokens_on_global_client(): void
     {
-        $this->makeUserAndAuthenticate();
+        $this->makeUserAndAuthenticate(guard : 'web');
 
         $data = [
             'name' => 'Token Name',
@@ -76,7 +76,7 @@ class PersonalAccessTokenTest extends TestCase
     #[Test]
     public function delete_personal_tokens_user_has_created(): void
     {
-        $user = $this->makeUserAndAuthenticate();
+        $user = $this->makeUserAndAuthenticate(guard : 'web');
 
         /** @var \Laravel\Passport\PersonalAccessTokenResult $token */
         $token = $user->createToken($this->personalAccessClient->name, ['sample-scope']);
