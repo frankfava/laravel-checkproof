@@ -2,10 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -34,19 +34,23 @@ class UserFactory extends Factory
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
             'password' => $password ?: $password = Hash::make(self::$defaultPassword),
-            'remember_token' => Str::random(10),
+            'active' => $this->faker->boolean(90),
+            'role' => $this->faker->randomElement(UserRole::cases())->value,
         ];
     }
 
-    /**
-     * State: Indicate that the user's email address should be unverified.
-     */
-    public function unverified(): static
+    public function active(): static
     {
         return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
+            'active' => true,
+        ]);
+    }
+
+    public function inactive(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'active' => false,
         ]);
     }
 }
