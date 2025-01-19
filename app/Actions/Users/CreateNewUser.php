@@ -3,7 +3,6 @@
 namespace App\Actions\Users;
 
 use App\Contracts\CreatesNewUser;
-use App\Contracts\CreatesValidator;
 use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -16,7 +15,7 @@ use Illuminate\Validation\ValidationException;
  *
  * Use for both admin management and registration
  */
-class CreateNewUser implements CreatesNewUser, CreatesValidator
+class CreateNewUser implements CreatesNewUser
 {
     use UserValidationRules;
 
@@ -59,8 +58,9 @@ class CreateNewUser implements CreatesNewUser, CreatesValidator
         $rules = [
             'name' => $this->nameRules(['required']),
             'email' => $this->uniqueEmailRules(['required']),
-            'password' => $this->strongPasswordRules(['required', 'confirmed']),
+            'password' => $this->passwordRules(['required', 'confirmed']),
             'role' => $this->roleRules(['sometimes']),
+            'active' => ['sometimes', 'boolean'],
             ...$customRules,
         ];
 

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Contracts\CreatesNewUser;
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateNewUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -31,6 +33,26 @@ class UserController extends Controller
         $this->authorize('view', $user);
 
         return UserResource::create($user);
+    }
+
+    public function store(CreateNewUserRequest $request, CreatesNewUser $creator)
+    {
+        $this->authorize('create', User::class);
+
+        $user = app(CreatesNewUser::class)->create($request->validated());
+
+        // dd($user->toArray());
+
+        return response()->json(UserResource::create($user), 201);
+
+        // =====
+
+        // // Send email to the new user
+        // Mail::to($user->email)->send(new UserCreated($user));
+
+        // // Send email to system administrator
+        // $adminEmail = 'admin@example.com';  // Or fetch from config
+        // Mail::to($adminEmail)->send(new AdminNotified($user));
     }
 
 }

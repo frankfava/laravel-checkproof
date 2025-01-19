@@ -2,7 +2,7 @@
 
 namespace App\Contracts;
 
-interface CreatesNewUser
+interface CreatesNewUser extends CreatesValidator
 {
     /**
      * Create a new user model with trusted data.
