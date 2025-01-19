@@ -8,9 +8,15 @@ class UserResource extends ModelResource
 {
     public function toArray(Request $request)
     {
+        $isIndex = $request->routeIs('users.index');
+
         return [
             ...$this->resource
-                ->makeHidden(['updated_at', 'password', 'active'])
+                ->makeHidden([
+                    'updated_at',
+                    'password',
+                    ...($isIndex ? ['active', 'role'] : []),
+                ])
                 ->toArray(),
         ];
     }

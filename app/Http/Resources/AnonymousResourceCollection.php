@@ -7,9 +7,9 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection as BaseResourceCo
 
 class AnonymousResourceCollection extends BaseResourceCollection
 {
-    public function paginationInformation($request, $paginated, $default): array
+    public function paginationInformation($request, $paginated, $original): array
     {
-        return [
+        $updated = [
             'currentPage' => $paginated['current_page'],
             'from' => $paginated['from'],
             'lastPage' => $paginated['last_page'],
@@ -17,6 +17,12 @@ class AnonymousResourceCollection extends BaseResourceCollection
             'to' => $paginated['to'],
             'total' => $paginated['total'],
         ];
+
+        if (method_exists($this->collects, 'customPagination')) {
+            return call_user_func([$this->collects, 'customPagination'], $request, $paginated, $original, $updated);
+        }
+
+        return $updated;
     }
 
     /**
