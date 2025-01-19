@@ -59,7 +59,7 @@ class CreateNewUser implements CreatesNewUser, CreatesValidator
         $rules = [
             'name' => $this->nameRules(['required']),
             'email' => $this->uniqueEmailRules(['required']),
-            'password' => $this->confirmedPasswordRules(['required']),
+            'password' => $this->strongPasswordRules(['required', 'confirmed']),
             'role' => $this->roleRules(['sometimes']),
             ...$customRules,
         ];

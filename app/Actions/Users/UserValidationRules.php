@@ -13,6 +13,15 @@ trait UserValidationRules
     {
         return array_merge($extra, [
             'string',
+            (new Password(8)),
+        ]);
+    }
+
+    /**  Get the validation rules used to validate Strong passwords.  */
+    protected function strongPasswordRules($extra = [])
+    {
+        return array_merge($extra, [
+            'string',
             (new Password(10))
                 ->symbols()
                 ->mixedCase()
@@ -20,18 +29,11 @@ trait UserValidationRules
         ]);
     }
 
-    protected function confirmedPasswordRules($extra = [])
-    {
-        return array_merge($this->passwordRules($extra), [
-            'confirmed',
-        ]);
-    }
-
     /** Get the validation rules used to validate names. */
     protected function nameRules($extra = [])
     {
         return array_merge($extra, [
-            'string', 'max:255',
+            'string', 'min:3', 'max:50',
         ]);
     }
 
