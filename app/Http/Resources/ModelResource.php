@@ -13,6 +13,8 @@ use Illuminate\Support\Collection;
  */
 class ModelResource extends JsonResource
 {
+    public static $wrap = 'data';
+
     public static function create($resource)
     {
         if ($resource instanceof LengthAwarePaginator || $resource instanceof Collection) {
@@ -21,7 +23,7 @@ class ModelResource extends JsonResource
             return $collection;
         }
 
-        static::withoutWrapping();
+        static::$wrap = null;
 
         return static::make($resource);
     }

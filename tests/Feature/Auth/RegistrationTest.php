@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Models\User;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -22,10 +23,10 @@ class RegistrationTest extends TestCase
             'password' => 'StrongPass1!',
             'password_confirmation' => 'StrongPass1!',
         ])
-            ->assertStatus(201)
+            ->assertCreated()
             ->assertJsonStructure(['token', 'user' => ['id', 'name', 'email']]);
 
-        $this->assertDatabaseHas('users', [
+        $this->assertDatabaseHas((new User)->getTable(), [
             'email' => 'johndoe@example.com',
             'role' => 'user',
         ]);

@@ -100,7 +100,7 @@ class PersonalAccessTokenTest extends TestCase
     {
         $response = $this
             ->getJson('/api/ping')
-            ->assertStatus(401)
+            ->assertUnauthorized()
             ->assertDontSeeText('pong');
     }
 }

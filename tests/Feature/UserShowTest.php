@@ -23,7 +23,7 @@ class UserShowTest extends TestCase
         $user = $this->makeUser(role : 'user');
 
         $this->getJson(route('users.show', [$user]))
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJsonFragment(['id' => $user->id]);
     }
 
@@ -34,7 +34,7 @@ class UserShowTest extends TestCase
         $user = $this->makeUser(role : 'user');
 
         $this->getJson(route('users.show', [$user]))
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJsonFragment(['id' => $user->id]);
     }
 

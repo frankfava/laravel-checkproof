@@ -19,15 +19,6 @@
         <testsuite name="Feature">
             <directory>tests/Feature</directory>
         </testsuite>
-		<testsuite name="Auth">
-			<directory suffix="Test.php">./tests/Feature/Auth</directory>
-			<directory suffix="Test.php">./tests/Feature/Passport</directory>
-		</testsuite>
-		<testsuite name="Models">
-			<directory suffix="Test.php">./tests/Feature</directory>
-			<exclude>./tests/Feature/Auth</exclude>
-			<exclude>./tests/Feature/Passport</exclude>
-		</testsuite>
     </testsuites>
     <source>
         <include>
