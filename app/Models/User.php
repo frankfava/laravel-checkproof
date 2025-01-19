@@ -66,4 +66,9 @@ class User extends Authenticatable
     {
         $query->byRoles(roles: $roles, in: false);
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }
