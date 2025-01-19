@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Contracts\CreatesNewUser;
 use App\Http\Responses\AuthResponse;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Hash;
 
 class RegistrationController extends Controller
 {
@@ -15,19 +14,20 @@ class RegistrationController extends Controller
      *
      * @return mixed
      */
-    public function store(Request $request)
+    public function store(Request $request, CreatesNewUser $creator)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-        ]);
+        $user = $creator->createWithValidation(
+            data : [
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => $request->password,
+                'password_confirmation' => $request->password_confirmation,
+            ],
+            customRules : [
+                'role' => 'prohibited',
+                'active' => 'prohibited',
+            ]
+        );
 
         $token = $user->createToken('auth_token');
 

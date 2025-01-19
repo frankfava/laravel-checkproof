@@ -19,14 +19,15 @@ class RegistrationTest extends TestCase
         $this->postJson(route('register'), [
             'name' => 'John Doe',
             'email' => 'johndoe@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
+            'password' => 'StrongPass1!',
+            'password_confirmation' => 'StrongPass1!',
         ])
             ->assertStatus(201)
             ->assertJsonStructure(['token', 'user' => ['id', 'name', 'email']]);
 
         $this->assertDatabaseHas('users', [
             'email' => 'johndoe@example.com',
+            'role' => 'user',
         ]);
     }
 
@@ -35,7 +36,7 @@ class RegistrationTest extends TestCase
     {
         $this->postJson(route('register'), [
             'email' => 'johndoe@example.com',
-            'password' => 'password123',
+            'password' => 'StrongPass1!',
         ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['name', 'password']);
