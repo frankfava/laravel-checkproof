@@ -53,4 +53,28 @@ class UserFactory extends Factory
             'active' => false,
         ]);
     }
+
+    public function role(string|UserRole $role)
+    {
+        $role = is_string($role) ? ($role == 'default' ? UserRole::default() : UserRole::from($role)) : $role;
+
+        return $this->state(fn (array $attributes) => [
+            'role' => $role,
+        ]);
+    }
+
+    public function admin()
+    {
+        return $this->role(UserRole::Admin);
+    }
+
+    public function manager()
+    {
+        return $this->role(UserRole::Manager);
+    }
+
+    public function user()
+    {
+        return $this->role(UserRole::User);
+    }
 }

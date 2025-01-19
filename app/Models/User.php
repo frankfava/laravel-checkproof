@@ -48,4 +48,22 @@ class User extends Authenticatable
         $query
             ->where('active', $flag);
     }
+
+    public function scopeByRoles($query, string|array|UserRole $roles = [], bool $in = true)
+    {
+        $roles = is_array($roles) ? $roles : [$roles];
+
+        $roles = array_unique(array_map(function ($role) {
+            return strtolower(trim($role instanceof UserRole ? $role->value : $role));
+        }, $roles));
+
+        if (! empty($roles)) {
+            call_user_func([$query, $in ? 'whereIn' : 'whereNotIn'], 'role', $roles);
+        }
+    }
+
+    public function scopeNotByRoles($query, string|array|UserRole $roles = [])
+    {
+        $query->byRoles(roles: $roles, in: false);
+    }
 }
