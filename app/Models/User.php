@@ -43,12 +43,17 @@ class User extends Authenticatable
         ];
     }
 
+
+    // ==== Scopes
+
+    /** Scope using active flag */
     public function scopeActive($query, bool $flag = true)
     {
         $query
             ->where('active', $flag);
     }
 
+    /** Filter those that have specific roles */
     public function scopeByRoles($query, string|array|UserRole $roles = [], bool $in = true)
     {
         $roles = is_array($roles) ? $roles : [$roles];
@@ -62,11 +67,15 @@ class User extends Authenticatable
         }
     }
 
+    /** Filter those that DONT have specific roles */
     public function scopeNotByRoles($query, string|array|UserRole $roles = [])
     {
         $query->byRoles(roles: $roles, in: false);
     }
 
+    // ===== Relationships
+
+    /** Orders of this user */
     public function orders()
     {
         return $this->hasMany(Order::class);

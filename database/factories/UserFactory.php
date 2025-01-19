@@ -35,7 +35,7 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'password' => $password ?: $password = Hash::make(self::$defaultPassword),
-            'active' => $this->faker->boolean(90),
+            'active' => $this->faker->boolean(80),
             'role' => $this->faker->randomElement(UserRole::cases())->value,
         ];
     }

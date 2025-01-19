@@ -21,6 +21,7 @@ class Order extends Model
         ];
     }
 
+    /** User that owns this order */
     public function user()
     {
         return $this->belongsTo(User::class);

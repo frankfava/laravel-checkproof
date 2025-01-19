@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Laravel\Passport\Client;
 use Laravel\Passport\ClientRepository;
-use Laravel\Passport\Passport;
 
 class UserSeeder extends Seeder
 {
@@ -17,28 +16,41 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
+        // Create active "admin" role
         $known = User::whereEmail($email = 'admin@example.com')->first();
         if (! $known) {
-            $known = User::factory()->create([
+            $known = User::factory()->admin()->active()->create([
                 'name' => 'Admin User',
-                'email' => 'admin@example.com',
+                'email' => $email,
             ]);
         }
 
+        // Create active "manager" role
+        $known = User::whereEmail($email = 'manager@example.com')->first();
+        if (! $known) {
+            $known = User::factory()->manager()->active()->create([
+                'name' => 'Manager User',
+                'email' => $email,
+            ]);
+        }
+
+        // Create active "user" role
         $known = User::whereEmail($email = 'test@example.com')->first();
         if (! $known) {
-            $known = User::factory()->create([
+            $known = User::factory()->user()->active()->create([
                 'name' => 'Test User',
-                'email' => 'test@example.com',
+                'email' => $email,
             ]);
         }
 
+        // Create more users with the "user" role
         foreach (range(1, 10) as $index) {
-            User::factory()->create([
-                'email' => 'user' . $index . '@example.com',
+            User::factory()->user()->create([
+                'email' => 'user'.$index.'@example.com',
             ]);
         }
 
+        // Create Personal Access Client for Passport
         $this->createPersonalAccessClient();
     }
 
