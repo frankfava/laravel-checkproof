@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Http\Passport;
+namespace Tests\Feature\Passport;
 
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\Passport;

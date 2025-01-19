@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Http\Auth;
+namespace Tests\Feature\Auth;
 
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;

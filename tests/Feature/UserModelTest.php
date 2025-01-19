@@ -8,7 +8,7 @@ use App\Models\User;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-class UsersTest extends TestCase
+class UserModelTest extends TestCase
 {
     #[Test]
     public function user_role_scope(): void
