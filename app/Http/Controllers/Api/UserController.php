@@ -55,4 +55,17 @@ class UserController extends Controller
         // Mail::to($adminEmail)->send(new AdminNotified($user));
     }
 
+
+    public function destroy(Request $request, User $user)
+    {
+        $this->authorize('delete', $user);
+
+        if ($user->is($request->user())) {
+            abort(403, 'You cannot delete yourself.');
+        }
+
+        $user->delete();
+
+        return response()->noContent();
+    }
 }
