@@ -29,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
         app()->singleton(\App\Contracts\CreatesNewUser::class, \App\Actions\Users\CreateNewUser::class);
 
         // Events
+        Event::listen(\Illuminate\Auth\Events\Login::class, \App\Listeners\LoginSuccessful::class);
         Event::listen('eloquent.created: '.\App\Models\User::class, \App\Listeners\NewUserCreated::class);
     }
 }
