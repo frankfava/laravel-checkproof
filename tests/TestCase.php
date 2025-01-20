@@ -53,7 +53,7 @@ abstract class TestCase extends BaseTestCase
      */
     protected function makeUser(...$args)
     {
-        $user = User::factory()->create($args);
+        $user = User::factory()->active()->create($args);
 
         return $user;
     }

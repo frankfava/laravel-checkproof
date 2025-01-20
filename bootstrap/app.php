@@ -35,9 +35,17 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withMiddleware(function (Middleware $middleware) {
+
+        // Add Middle ware aliases
         $middleware->alias([
             'scopes' => CheckScopes::class,
             'scope' => CheckForAnyScope::class,
+            'ensure-active' => \App\Http\Middleware\EnsureUserIsActive::class,
+        ]);
+
+        // Make sure the user is active before allowing them to access the API
+        $middleware->appendToGroup('api', [
+            \App\Http\Middleware\EnsureUserIsActive::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

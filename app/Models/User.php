@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\UserRole;
 use App\Traits\HasCustomBuilder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -18,6 +19,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'active',
         'role',
     ];
 
@@ -25,6 +27,7 @@ class User extends Authenticatable
         'name' => null,
         'email' => null,
         'role' => UserRole::User,
+        'active' => true,
         'password' => null,
     ];
 
@@ -43,11 +46,23 @@ class User extends Authenticatable
         ];
     }
 
+    public function searchBy(): array
+    {
+        return ['name', 'email'];
+    }
+
     public function routeNotificationForMail()
     {
         return $this->name ? [$this->email => $this->name] : $this->email;
     }
 
+    // ===== Attributes
+
+    /** Can the authenticated user update this user (uses Policy) */
+    public function canEdit(): Attribute
+    {
+        return Attribute::make(get: fn () => auth()->check() ? auth()->user()->can('update', $this) : null);
+    }
 
     // ==== Scopes
 

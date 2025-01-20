@@ -91,7 +91,7 @@ class PersonalAccessTokenTest extends TestCase
         $this->makeUserAndAuthenticateWithToken();
 
         $response = $this
-            ->getJson('/api/ping')
+            ->getJson(route('ping.auth'))
             ->assertSeeText('pong');
     }
 
@@ -99,7 +99,7 @@ class PersonalAccessTokenTest extends TestCase
     public function cannot_ping_api_without_personal_access_token(): void
     {
         $response = $this
-            ->getJson('/api/ping')
+            ->getJson(route('ping.auth'))
             ->assertUnauthorized()
             ->assertDontSeeText('pong');
     }
