@@ -91,7 +91,7 @@ class EloquentBuilderDecorator
     }
 
     /** Set Total Limit */
-    public function limit(?int $limit = null): static
+    public function total(?int $limit = null): static
     {
         return $this->setOptions(['limit' => $limit]);
     }

@@ -58,11 +58,11 @@ class EloquentBuilder extends Builder
     {
         // If decorator has been called then apply the options
         if ($this->isDecorated) {
-            $builder = $this->decorator->applyOptionsToQuery($this);
+            $this->decorator->applyOptionsToQuery($this);
         }
 
         return (new EloquentBuilderResults(
-            builder : $builder,
+            builder : $this,
             perPage : $this->decorator->getOption('perPage'),
             page : $this->decorator->getOption('page'),
             limit : $this->decorator->getOption('limit'),

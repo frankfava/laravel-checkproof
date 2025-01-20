@@ -106,13 +106,12 @@ class EloquentBuilderResults
      */
     protected function collectResults($columns = ['*']): Collection
     {
-        $items = $this->builder;
         $limit = (int) $this->limit ??= null;
         if ($limit) {
             $this->builder->limit($limit);
         }
 
-        return $this->mapItems($this->modifyResults($items->get(columns : $columns)));
+        return $this->mapItems($this->modifyResults($this->builder->get(columns : $columns)));
     }
 
     /**
