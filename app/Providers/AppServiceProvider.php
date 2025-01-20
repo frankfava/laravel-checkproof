@@ -2,9 +2,7 @@
 
 namespace App\Providers;
 
-use App\Actions\Users\CreateNewUser;
-use App\Contracts\CreatesNewUser;
-use App\Models\Passport\Client;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 
@@ -23,10 +21,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Passport Setup
         Passport::personalAccessTokensExpireIn(now()->addMonths(6));
-        Passport::useClientModel(Client::class);
+        Passport::useClientModel(\App\Models\Passport\Client::class);
 
-        // Bind our action to an implementation
-        app()->singleton(CreatesNewUser::class, CreateNewUser::class);
+        // Bind our actions to an implementation
+        app()->singleton(\App\Contracts\CreatesNewUser::class, \App\Actions\Users\CreateNewUser::class);
+
+        // Events
+        Event::listen('eloquent.created: '.\App\Models\User::class, \App\Listeners\NewUserCreated::class);
     }
 }

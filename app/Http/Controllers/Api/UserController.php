@@ -41,20 +41,8 @@ class UserController extends Controller
 
         $user = app(CreatesNewUser::class)->create($request->validated());
 
-        // dd($user->toArray());
-
         return response()->json(UserResource::create($user), 201);
-
-        // =====
-
-        // // Send email to the new user
-        // Mail::to($user->email)->send(new UserCreated($user));
-
-        // // Send email to system administrator
-        // $adminEmail = 'admin@example.com';  // Or fetch from config
-        // Mail::to($adminEmail)->send(new AdminNotified($user));
     }
-
 
     public function destroy(Request $request, User $user)
     {

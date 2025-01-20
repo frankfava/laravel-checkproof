@@ -43,6 +43,11 @@ class User extends Authenticatable
         ];
     }
 
+    public function routeNotificationForMail()
+    {
+        return $this->name ? [$this->email => $this->name] : $this->email;
+    }
+
 
     // ==== Scopes
 
