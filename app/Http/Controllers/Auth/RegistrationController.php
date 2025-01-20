@@ -16,7 +16,8 @@ class RegistrationController extends Controller
      */
     public function store(Request $request, CreatesNewUser $creator)
     {
-        $user = $creator->createWithValidation(
+
+        $validator = $creator->createValidator(
             data : [
                 'name' => $request->name,
                 'email' => $request->email,
@@ -28,6 +29,8 @@ class RegistrationController extends Controller
                 'active' => 'prohibited',
             ]
         );
+
+        $user = $creator->create($validator->validated());
 
         $token = $user->createToken('auth_token');
 

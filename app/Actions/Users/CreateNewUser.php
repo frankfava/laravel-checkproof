@@ -7,7 +7,6 @@ use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 
 /**
  * Single Action Class to create a new user
@@ -31,22 +30,7 @@ class CreateNewUser implements CreatesNewUser
             'active' => isset($data['active']) ? (bool) $data['active'] : true,
         ]);
 
-        // @todo: Fire Custom Event if verification is no used
-
         return $user;
-    }
-
-    /** Create a new user model with validated data */
-    public function createWithValidation(array $data, array $customRules = [], array $customMessages = [])
-    {
-        $validator = $this->createValidator($data, $customRules, $customMessages);
-
-        // Validation Error
-        if ($validator->fails()) {
-            throw new ValidationException($validator);
-        }
-
-        return $this->create($validator->validated());
     }
 
     /**

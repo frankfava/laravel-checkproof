@@ -27,6 +27,8 @@ class AppServiceProvider extends ServiceProvider
 
         // Bind our actions to an implementation
         app()->singleton(\App\Contracts\CreatesNewUser::class, \App\Actions\Users\CreateNewUser::class);
+        app()->singleton(\App\Contracts\UpdatesUserPasswords::class, \App\Actions\Users\UpdateUserPassword::class);
+        app()->singleton(\App\Contracts\UpdatesUserProfileInformation::class, \App\Actions\Users\UpdateUserProfileInformation::class);
 
         // Events
         Event::listen(\Illuminate\Auth\Events\Login::class, \App\Listeners\LoginSuccessful::class);

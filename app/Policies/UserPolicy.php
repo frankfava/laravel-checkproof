@@ -39,7 +39,7 @@ class UserPolicy
             return true;
         }
 
-        return false;
+        return $auth->is($resource);
     }
 
     public function delete(User $auth, User $resource)

@@ -27,7 +27,7 @@ class UserCreateTest extends TestCase
         /** @var \App\Actions\Users\CreateNewUser Resolve interface to concrete action */
         $creator = app(CreatesNewUser::class);
 
-        $user = $creator->createWithValidation(
+        $validator = $creator->createValidator(
             data : [
                 'name' => 'John Doe',
                 'email' => 'john.doe@example.com',
@@ -39,6 +39,8 @@ class UserCreateTest extends TestCase
                 'password' => 'required|min:8|confirmed', // Override the strong password requirement
             ]
         );
+
+        $user = $creator->create($validator->validated());
 
         $this->assertDatabaseHas((new User)->getTable(), [
             'name' => 'John Doe',
@@ -126,6 +128,22 @@ class UserCreateTest extends TestCase
     }
 
     #[Test]
+    public function password_must_be_confirmed_when_creating_a_user()
+    {
+        $this->makeUserAndAuthenticateWithToken(role : 'admin');
+
+        $userData = User::factory()->make();
+
+        $this->postJson(route('users.store'), [
+            'name' => $userData->name,
+            'email' => $userData->email,
+            'password' => 'password',
+        ])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['password']);
+    }
+
+    #[Test]
     public function validate_structure()
     {
         $this->makeUserAndAuthenticateWithToken(role : 'admin');
@@ -146,21 +164,5 @@ class UserCreateTest extends TestCase
                 'role',
                 'created_at',
             ]);
-    }
-
-    #[Test]
-    public function password_must_be_confirmed_when_creating_a_user()
-    {
-        $this->makeUserAndAuthenticateWithToken(role : 'admin');
-
-        $userData = User::factory()->make();
-
-        $this->postJson(route('users.store'), [
-            'name' => $userData->name,
-            'email' => $userData->email,
-            'password' => 'password',
-        ])
-            ->assertUnprocessable()
-            ->assertJsonValidationErrors(['password']);
     }
 }

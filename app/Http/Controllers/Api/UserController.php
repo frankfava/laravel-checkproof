@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Contracts\CreatesNewUser;
+use App\Contracts\UpdatesUserPasswords;
+use App\Contracts\UpdatesUserProfileInformation;
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateNewUserRequest;
+use App\Http\Requests\UpdateUserPasswordRequest;
+use App\Http\Requests\UpdateUserProfileRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -39,9 +43,27 @@ class UserController extends Controller
     {
         $this->authorize('create', User::class);
 
-        $user = app(CreatesNewUser::class)->create($request->validated());
+        $user = $creator->create($request->validated());
 
         return response()->json(UserResource::create($user), 201);
+    }
+
+    public function updateInformation(UpdateUserProfileRequest $request, User $user, UpdatesUserProfileInformation $updater)
+    {
+        $this->authorize('update', $user);
+
+        $updater->update($user, $request->all());
+
+        return response()->json('');
+    }
+
+    public function updatePassword(UpdateUserPasswordRequest $request, User $user, UpdatesUserPasswords $updater)
+    {
+        $this->authorize('update', $user);
+
+        $updater->update($user, $request->all());
+
+        return response()->json('');
     }
 
     public function destroy(Request $request, User $user)

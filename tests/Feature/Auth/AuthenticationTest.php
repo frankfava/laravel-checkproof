@@ -28,11 +28,37 @@ class AuthenticationTest extends TestCase
     }
 
     #[Test]
-    public function login_with_invalid_credentials()
+    public function a_user_can_not_authenticate_with_invalid_password()
     {
+        $user = User::factory()->create();
+
         $this->postJson(route('login'), [
-            'email' => 'nonexistent@example.com',
-            'password' => 'wrongpassword',
-        ])->assertUnprocessable();
+            'email' => $user->email,
+            'password' => 'wrong-password',
+        ])
+            ->assertUnprocessable();
+
+        $this->assertGuest();
+    }
+
+    #[Test]
+    public function get_the_authenticated_users_data()
+    {
+        $user = $this->makeUserAndAuthenticateWithToken();
+
+        $response = $this->getJson(route('user'))
+            ->assertStatus(200)
+            ->assertJsonFragment(['id' => $user->id]);
+    }
+
+    #[Test]
+    public function an_authenticated_user_can_access_api()
+    {
+        $user = $this->makeUserAndAuthenticateWithToken();
+
+        $this->getJson(route('ping.auth'))
+            ->assertStatus(200)
+            ->assertSeeText('pong');
+
     }
 }

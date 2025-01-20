@@ -12,15 +12,14 @@ class CreateNewUserRequest extends FormRequest
 {
     use UserValidationRules;
 
-    public function authorize(): bool
-    {
-        return ($user = $this->user()) ? $user->can('create', User::class) : false;
-    }
-
     protected function prepareForValidation()
     {
+        if (! $this->user()) {
+            $this->failedAuthorization();
+        }
+
         // If Authenticated user is not admin, then force default role and active status
-        if (! $this->user() || $this->user()->role != UserRole::Admin) {
+        if ($this->user()->role != UserRole::Admin) {
             if ($this->has('role')) {
                 $this->replace($this->except('role'));
             }
@@ -28,6 +27,11 @@ class CreateNewUserRequest extends FormRequest
                 $this->replace($this->except('active'));
             }
         }
+    }
+
+    public function authorize(): bool
+    {
+        return ($user = $this->user()) ? $user->can('create', User::class) : false;
     }
 
     public function validator()
