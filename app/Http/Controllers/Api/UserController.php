@@ -22,9 +22,9 @@ class UserController extends Controller
 
         // Use the very cool custom eloquent Builder
         $query = User::query()
+            ->byRoles([UserRole::User->value])
+            ->active(true)
             ->withCount('orders')
-            ->where('active', true)
-            ->where('role', UserRole::User->value)
             ->sort('created_at', true)
             ->useRequest($request)
             ->mapItems(fn ($user) => $user->append('can_edit'));

@@ -1,0 +1,698 @@
+{
+    "info": {
+        "_postman_id": "6c2bba58-4162-4e62-a654-97346f3b3d8c",
+        "name": "CheckProof",
+        "description": "A Simple collection of routes for the [https://github.com/frankfava/laravel-checkproof](https://github.com/frankfava/laravel-checkproof) repo.\n\nAfter setting up the project. Update the `base_url` variable.  \n  \nRegister an account or login with a know account first.  \nDoing this will set you Authentication Token so you submit authenticated requests.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "_exporter_id": "3394182",
+        "_collection_link": "https://frankfava90.postman.co/workspace/Projects~37d0ac38-1fc5-4908-8877-aee5742079b7/collection/3394182-6c2bba58-4162-4e62-a654-97346f3b3d8c?action=share&source=collection_link&creator=3394182"
+    },
+    "item": [
+        {
+            "name": "Guest",
+            "item": [
+                {
+                    "name": "Register",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Expected request Status\", function () {",
+                                    "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Content-Type is application/json\", function () {",
+                                    "    pm.response.to.have.header('Content-Type', 'application/json');",
+                                    "});",
+                                    "",
+                                    "if(pm.response.code == 200) {",
+                                    "    const jsonResponse = pm.response.json();",
+                                    "    const request = JSON.parse(pm.request.body.raw);",
+                                    "",
+                                    "    if(jsonResponse.token) {",
+                                    "        pm.collectionVariables.set('auth_token',jsonResponse.token)",
+                                    "        pm.collectionVariables.set('known_email',request.email)",
+                                    "        pm.collectionVariables.set('known_password',request.password)",
+                                    "    } else {",
+                                    "        throw new Error(\"Could Not Register. Auth Token not provided\");",
+                                    "    }",
+                                    "} else {",
+                                    "    console.error(pm.response.json())",
+                                    "}"
+                                ],
+                                "type": "text/javascript",
+                                "packages": {}
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"{{$randomFullName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"password\" : \"{{validPassword}}\",\n    \"password_confirmation\" : \"{{validPassword}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/register",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "register"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Login",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Expected request Status\", function () {",
+                                    "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Content-Type is application/json\", function () {",
+                                    "    pm.response.to.have.header('Content-Type', 'application/json');",
+                                    "});",
+                                    "",
+                                    "if(pm.response.code == 200) {",
+                                    "    const jsonResponse = pm.response.json();",
+                                    "    const request = JSON.parse(pm.request.body.raw);",
+                                    "",
+                                    "    if(jsonResponse.token) {",
+                                    "        pm.collectionVariables.set('token', jsonResponse.token);",
+                                    "        pm.collectionVariables.set('known_email',request.email)",
+                                    "        pm.collectionVariables.set('known_password',request.password)",
+                                    "    } else {",
+                                    "        throw new Error(\"Could Not Login. Auth Token not provided\");",
+                                    "    }",
+                                    "} else {",
+                                    "    console.error(pm.response.json())",
+                                    "}"
+                                ],
+                                "type": "text/javascript",
+                                "packages": {}
+                            }
+                        },
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript",
+                                "packages": {}
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\" : \"{{validEmail}}\",\n    \"password\" : \"{{validPassword}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/login",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "login"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Login As Admin",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Expected request Status\", function () {",
+                                    "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Content-Type is application/json\", function () {",
+                                    "    pm.response.to.have.header('Content-Type', 'application/json');",
+                                    "});",
+                                    "",
+                                    "if(pm.response.code == 200) {",
+                                    "    const jsonResponse = pm.response.json();",
+                                    "    const request = JSON.parse(pm.request.body.raw);",
+                                    "",
+                                    "    if(jsonResponse.token) {",
+                                    "        pm.collectionVariables.set('token', jsonResponse.token);",
+                                    "        pm.collectionVariables.set('known_email',request.email)",
+                                    "        pm.collectionVariables.set('known_password',request.password)",
+                                    "    } else {",
+                                    "        throw new Error(\"Could Not Login. Auth Token not provided\");",
+                                    "    }",
+                                    "} else {",
+                                    "    console.error(pm.response.json())",
+                                    "}"
+                                ],
+                                "type": "text/javascript",
+                                "packages": {}
+                            }
+                        },
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript",
+                                "packages": {}
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\" : \"admin@example.com\",\n    \"password\" : \"password\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/login",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "login"
+                            ]
+                        },
+                        "description": "Make sure there is a user with an admin role in the database."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Guest Ping",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Expected request Status\", function () {",
+                                    "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Body matches string\", function () {",
+                                    "    pm.expect(pm.response.text()).to.be.eq(\"pong\");",
+                                    "});"
+                                ],
+                                "type": "text/javascript",
+                                "packages": {}
+                            }
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "disabledSystemHeaders": {},
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/ping/guest",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "ping",
+                                "guest"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Authenticated",
+            "item": [
+                {
+                    "name": "Users",
+                    "item": [
+                        {
+                            "name": "List Users",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{base_url}}/api/users",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "users"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "q",
+                                            "value": "John",
+                                            "description": "String to search for",
+                                            "disabled": true
+                                        },
+                                        {
+                                            "key": "searchBy[]",
+                                            "value": "name",
+                                            "description": "Column to search in eg. name, email",
+                                            "disabled": true
+                                        },
+                                        {
+                                            "key": "searchBy[]",
+                                            "value": "email",
+                                            "description": "Another Column to search in eg. name, email",
+                                            "disabled": true
+                                        },
+                                        {
+                                            "key": "sortBy",
+                                            "value": "orders_count",
+                                            "description": "Column to sort by eg. name, email, created_at, orders_count",
+                                            "disabled": true
+                                        },
+                                        {
+                                            "key": "sortDesc",
+                                            "value": "0",
+                                            "description": "Sort from highest to lowest = 1, lowest to highest = 0",
+                                            "disabled": true
+                                        },
+                                        {
+                                            "key": "per_page",
+                                            "value": "4",
+                                            "description": "How many items per_page - Leave blank to return all",
+                                            "disabled": true
+                                        },
+                                        {
+                                            "key": "page",
+                                            "value": "2",
+                                            "description": "What page should be shown",
+                                            "disabled": true
+                                        },
+                                        {
+                                            "key": "limit",
+                                            "value": "3",
+                                            "description": "Total limit (Used only when per_page is empty)",
+                                            "disabled": true
+                                        }
+                                    ]
+                                }
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Create User",
+                            "request": {
+                                "method": "POST",
+                                "header": [],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"name\": \"{{$randomFullName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"{{validPassword}}\",\n    \"password_confirmation\": \"{{validPassword}}\"\n    // \"role\": \"manager\",\n    // \"active\" : false\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/api/users",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "users"
+                                    ]
+                                }
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Update User Profile",
+                            "request": {
+                                "method": "PUT",
+                                "header": [],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"name\": \"{{$randomFullName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"role\": \"manager\",\n    \"active\" : false\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/api/users/profile-information/:userId",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "users",
+                                        "profile-information",
+                                        ":userId"
+                                    ],
+                                    "variable": [
+                                        {
+                                            "key": "userId",
+                                            "value": "8",
+                                            "description": "User ID"
+                                        }
+                                    ]
+                                }
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Update User Password",
+                            "request": {
+                                "method": "PUT",
+                                "header": [],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"current_password\": \"{{validPassword}}\",\n    \"password\": \"{{validPassword}}12\",\n    \"password_confirmation\": \"{{validPassword}}12\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/api/users/password/:userId",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "users",
+                                        "password",
+                                        ":userId"
+                                    ],
+                                    "variable": [
+                                        {
+                                            "key": "userId",
+                                            "value": "8",
+                                            "description": "User ID"
+                                        }
+                                    ]
+                                }
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Show User",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{base_url}}/api/users/:userId",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "users",
+                                        ":userId"
+                                    ],
+                                    "variable": [
+                                        {
+                                            "key": "userId",
+                                            "value": "3",
+                                            "description": "User ID"
+                                        }
+                                    ]
+                                }
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Delete User",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{base_url}}/api/users/:userId",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "users",
+                                        ":userId"
+                                    ],
+                                    "variable": [
+                                        {
+                                            "key": "userId",
+                                            "value": "8",
+                                            "description": "User ID"
+                                        }
+                                    ]
+                                }
+                            },
+                            "response": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Get Authenticated User",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Expected request Status\", function () {",
+                                    "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Content-Type is application/json\", function () {",
+                                    "    pm.response.to.have.header('Content-Type', 'application/json');",
+                                    "});"
+                                ],
+                                "type": "text/javascript",
+                                "packages": {}
+                            }
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "disabledSystemHeaders": {},
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/user",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Auth Ping",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Expected request Status\", function () {",
+                                    "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Body matches string\", function () {",
+                                    "    pm.expect(pm.response.text()).to.be.eq(\"pong\");",
+                                    "});"
+                                ],
+                                "type": "text/javascript",
+                                "packages": {}
+                            }
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "disabledSystemHeaders": {},
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/ping/auth",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "ping",
+                                "auth"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ],
+            "auth": {
+                "type": "bearer",
+                "bearer": [
+                    {
+                        "key": "token",
+                        "value": "{{token}}",
+                        "type": "string"
+                    }
+                ]
+            },
+            "event": [
+                {
+                    "listen": "prerequest",
+                    "script": {
+                        "type": "text/javascript",
+                        "packages": {},
+                        "exec": [
+                            ""
+                        ]
+                    }
+                },
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "packages": {},
+                        "exec": [
+                            ""
+                        ]
+                    }
+                }
+            ]
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                    "pm.request.headers.add({key: 'Content-Type', value: 'application/json' });",
+                    "pm.request.headers.add({key: 'Accept', value: 'application/json' });"
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "https://checkproof.test",
+            "type": "string"
+        },
+        {
+            "key": "validEmail",
+            "value": "johndoe@example.com",
+            "type": "string"
+        },
+        {
+            "key": "validPassword",
+            "value": "Password1!",
+            "type": "string"
+        },
+        {
+            "key": "token",
+            "value": ""
+        },
+        {
+            "key": "known_email",
+            "value": ""
+        },
+        {
+            "key": "known_password",
+            "value": ""
+        }
+    ]
+}
