@@ -1,16 +1,9 @@
 # Laravel Foundation
 
-Built by Frank Fava for CheckProof as a "Test of Skill".
+Built a simplified display of me Laravel skills.
 
-#### A note to my future employer:
+This is a simple backend CRUD implementation of the User model. Nothing to complicated but have implemented several key features (listed below) to showcase my depth of understanding in Laravel.
 
-Thank you for considering me for this role. While the requirements for your test were straightforward, I chose to go beyond the basics to showcase my depth of understanding in Laravel.
-
-This project could have been implemented in many ways, including a "just-make-it-work" approach. However, I prioritised adding layers of abstraction to highlight how I organize code for readability, scalability, and maintainability.
-
-*Please Note:* Password requirements are stronger than requests. Minimum 10 characters and at least one each of: Uppercase letter, lowercase letter, a number and a symbol, special character. eg. `StrongPass1!`. I also added in a custom middleware that prevents any authenticated user that isnt `active` from making an API rquest 
-
-I encorage you to check out the full test suite as it contains a test for all the project requirements and more.
 
 ## Table of Contents
 
@@ -47,7 +40,7 @@ This a simple setup with just API routes setup for the User model. An overview o
 
 - Policies for controller authorisation
     - Fine tuning who can reach the controllers
-    - Used directly with the `can_edit` property 
+    - Used directly with the `can_edit` attribute 
 
 - Eloquent Scopes and Attributes 
 
@@ -190,6 +183,7 @@ This API provides endpoints for the built in User Model and basic Authentication
   - Parameters: `name`, `email`, `password`, `password_confirmation`
   - Use the `token` from the response in the `Authorization` header for all subsequent API calls
   ```bash
+  - **NOTE:** Passwords must be strong, minimum 10 characters and at least one each of: Uppercase letter, lowercase letter, a number and a symbol, special character. eg. `StrongPass1!`
   curl -X POST http://127.0.0.1:8000/api/register \
        -H "Content-Type: application/json" \
        -H "Accept: application/json" \
